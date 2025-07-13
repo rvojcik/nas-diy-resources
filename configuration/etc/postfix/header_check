@@ -1,0 +1,3 @@
+/^From: .*i$/ REPLACE From: receiver@myemail.tld
+/^Subject: (.+)$/i REPLACE Subject: [nas] $1
+/^To:.*$/ REDIRECT receiver@myemail.tld 
