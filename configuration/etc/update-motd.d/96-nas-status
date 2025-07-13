@@ -1,0 +1,10 @@
+#!/bin/bash
+#MDRAID
+/usr/bin/sed -E -n '/^md[0-9]+ :/,/^unused/p' /proc/mdstat | ccze -A
+# ZFS
+echo
+zpool list -o name,size,alloc,frag,health | ccze -A
+echo
+# MEMORY
+free -m | ccze -A
+echo
