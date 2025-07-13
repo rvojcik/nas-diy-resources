@@ -1,0 +1,16 @@
+[Unit]
+Description=Docker services started by docker compose
+After=network.target auditd.service docker.service
+Requires=docker.service
+
+[Service]
+Restart=always
+StandardOutput=null
+ExecStartPre=/usr/bin/docker compose --project-directory /containers/%i/ -f /containers/%i/docker-compose.yml down -v
+ExecStart=/usr/bin/docker compose --project-directory /containers/%i/ -f /containers/%i/docker-compose.yml up
+ExecStop=/usr/bin/docker compose --project-directory /containers/%i/ -f /containers/%i/docker-compose.yml down
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+
