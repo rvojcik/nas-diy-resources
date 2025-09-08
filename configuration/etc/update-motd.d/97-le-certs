@@ -1,0 +1,54 @@
+#!/bin/bash
+
+WHITE="[1m"
+GREY="[2m"
+UNDERLINE="[4m"
+DEFACE="[9m"
+DARK="[30m"
+RED="[31m"
+GREEN="[32m"
+YELLOW="[33m"
+BLUE="[34m"
+PINK="[35m"
+AZURE="[36m"
+BDARK="[40m"
+BRED="[41m"
+BGREEN="[42m"
+BYELLOW="[43m"
+BBLUE="[44m"
+BPINK="[45m"
+BAZURE="[46m"
+BWHITE="[7m"
+HDARK="[90m"
+HRED="[91m"
+HGREEN="[92m"
+HYELLOW="[93m"
+HBLUE="[94m"
+HPINK="[95m"
+HAZURE="[96m"
+NOC="[0m"
+
+check_certificates="$(ls -d /etc/letsencrypt/live/*/)"
+
+echo -e "\n${HYELLOW}TLS Certificates${NOC}\n"
+for cert_path in $check_certificates ; do
+
+    cert=$(basename $cert_path)
+
+    now_sec=$(date +"%s")
+    end_date=$(openssl x509 -enddate -in /etc/letsencrypt/live/${cert}/cert.pem -noout | cut -d"=" -f2)
+    end_sec=$(date -d "$end_date" +"%s")
+    delta=$((end_sec-now_sec))
+    days=$((delta/86400))
+    if [ $days -lt 20 ] ; then
+        color=$HYELLOW
+    elif [ $days -lt 5 ] ; then
+        color=$HRED
+    else
+        color=$HGREEN
+    fi
+
+    printf "| %-35s | %10s |\n\n" ${color}${cert}${NOC} "${color}${days} days$NOC"
+
+done
+
