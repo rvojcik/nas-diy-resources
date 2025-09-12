@@ -7,12 +7,18 @@ volumes:
       o: bind
       type: none
       device: /var/lib/containers-data/owncloud/server
-  mysql:
+  db:
     driver: local
     driver_opts:
       o: bind
       type: none
-      device: /var/lib/containers-data/owncloud/mysql
+      device: /var/lib/containers-data/owncloud/mariadb
+  dbbackup:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: /var/lib/containers-data/owncloud/dbbackup
   redis:
     driver: local
     driver_opts:
@@ -66,7 +72,8 @@ services:
       timeout: 5s
       retries: 5
     volumes:
-      - mysql:/var/lib/mysql
+      - db:/var/lib/mysql
+      - dbbackup:/backup
 
   redis:
     image: redis:6
